@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>99moto A-frame</title>
+
+    <style>
+      body {
+        background-color: #5c5c5c;
+
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .mira {
+          position: absolute;
+          padding: 0 80px;
+          max-width: 230px;
+          
+
+          #mira-moto {
+            width: 100%;
+            max-width: 230px;
+          }
+        }
+      }
+    </style>
+
+    <script src="./aframe-master.js"></script>
+    <!-- <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script> -->
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+
+    <!-- Scripts A-frame (components) -->
+    <script>    
+      AFRAME.registerComponent('hello-world', {
+        init: function () {
+          console.log('Hello, World!');
+        }
+      });
+
+      AFRAME.registerComponent('set-stars', {
+        init: function() {
+          var coordenadas = [
+            {
+              constelacao: { x: 0, y: 12, z: -13 },
+              estrela1: { x: 18.05943, y: 1.6, z: -4.37369 },
+              estrela2: { x: 21.0724, y: 8.4112, z: 3.70871 },
+              estrela3: { x: 10.48846, y: 16.60277, z: -0.8941 },
+              estrela4: { x: 2.07132, y: 13.71825, z: -9.23096 },
+              estrela5: { x: -8.18114, y: 19.48466, z: -3.88721 }
+            }
+          ];
+          var coordenadaAtiva = coordenadas[Math.floor(Math.random()*coordenadas.length)];
+          console.log(coordenadaAtiva);
+
+          // Seta as coordenadas Constelaçao e estrelas
+          this.el.object3D.position.set(coordenadaAtiva.constelacao.x, coordenadaAtiva.constelacao.y, coordenadaAtiva.constelacao.z);
+          var estrelas = this.el.querySelectorAll('.clickable');
+          for(let i = 0; i < estrelas.length; i++) {
+            estrelas[0].object3D.position.set(coordenadaAtiva['estrela' + (i+1)].x, coordenadaAtiva['estrela' + (i+1)].y, coordenadaAtiva['estrela' + (i+1)].z);
+          }
+        }
+      });
+
+      AFRAME.registerComponent('scale-on-mouseenter', {
+        // schema: {
+        //   to: {default: '2.5 2.5 2.5', type: 'vec3'}
+        // },
+
+        init: function () {
+          var data = this.data;
+
+          var el = this.el;
+          this.el.addEventListener('mouseenter', function (e) {
+            console.log(e.target)
+            el.object3D.scale.set(1.3, 1.3, 1.3);
+          });
+          this.el.addEventListener('mouseleave', function () {
+            el.object3D.scale.set(1, 1, 1);
+          });
+        }
+      });
+    </script>
+    <!-- Scripts A-frame (components) -->
+  </head>
+
+  <body>
+    <a-scene>
+      <!-- Gerenciador de arquivos -->
+      <a-assets>
+        <img id="bgTexture" src="./src/assets/360-image.jpg">
+        <img id="starTexture" src="./src/assets/Estrela.png">
+      </a-assets>
+
+
+      <!-- Entidades da cena -->
+      <a-camera id="camera-target" look-controls="reverseMouseDrag: true">
+        <a-cursor color="red" raycaster="objects: .clickable; far: 100"></a-cursor>
+      </a-camera>
+
+      <a-entity class="constelacao" set-stars>
+        <a-image class="clickable" src="#starTexture" look-at="#camera-target" width="4" height="4" opacity="0.6"></a-image>
+       
+        <a-image class="clickable" src="#starTexture" look-at="#camera-target" position="21.0724 8.4112 3.70871" width="4" height="4" opacity="0.6"></a-image>
+
+        <a-image class="clickable" src="#starTexture" look-at="#camera-target" position="10.48846 16.60277 -0.8941" width="4" height="4" opacity="0.6"></a-image>
+
+        <a-image class="clickable" src="#starTexture" look-at="#camera-target" position="2.07132 13.71825 -9.23096" width="4" height="4" opacity="0.6"></a-image>
+
+        <a-image class="clickable" src="#starTexture" look-at="#camera-target" position="-8.18114 19.48466 -3.88721" width="4" height="4" opacity="0.6"></a-image>
+      </a-entity>
+      <!-- Entidades da cena -->
+
+      
+      <a-sky 
+      src="#bgTexture" 
+      rotation="0 -130 0"
+      ></a-sky>
+
+    </a-scene>
+
+    
+    <div class="mira">
+      <img id="mira-moto" src="./src/assets/mira-moto.png" alt="">
+    </div>
+  
+
+    <script src="./main.js"></script>
+  </body>
+</html>
+
+<!-- estrela1: { x: -2.353, y: 7.655, z: -15.417 },
+estrela2: { x: -7.286, y: 7.652, z: -12.158 },
+estrela3: { x: -3.286, y: 10.907, z: -9.96 },
+estrela4: { x: 2.051, y: 10.333, z: -9.298 },
+estrela5: { x: 5.276, y: 10.578, z: -6.418 } 
+animation="property: object3D.position.y; to: 2.2; dir: alternate; dur: 2000; loop: true"-->
