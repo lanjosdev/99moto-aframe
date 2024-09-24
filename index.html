@@ -15,13 +15,16 @@
         border: none;
       }
       img {
-          display: inline-block;
-          width: 100%;
-          max-width: fit-content;
+        display: inline-block;
+        width: 100%;
+        max-width: fit-content;
+      }
+      .a-enter-vr, .a-enter-ar {
+        display: none;
       }
 
       body {
-        background-color: #122238;
+        background-color: #020811;
 
         position: relative;
         display: flex;
@@ -44,7 +47,7 @@
               /* max-width: 270px; */
             /* } */
             #seta-moto {
-              max-width: 150px;
+              max-width: 180px;
               position: absolute;
               top: 50%;
               left: 50%;
@@ -52,6 +55,28 @@
               /* background-color: rgba(150, 148, 125, 0.527); */
             }
           }
+        }
+
+        #videoRef {
+          width: 100%;
+          /* background-color: red; */
+          /* position: absolute; */
+          /* position: absolute;
+          left: 0;
+          top: 0; */
+          
+          opacity: 0.6;
+        }
+
+        footer {
+          /* background-color: red; */
+          width: 100%;
+          max-width: 200px;
+
+          position: absolute;
+          bottom: 0;
+
+          padding: 25px;
         }
       }
 
@@ -71,8 +96,8 @@
       }
     </style>
 
-    <!-- <script src="./aframe-master.js"></script> -->
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="./aframe-master.js"></script>
+    <!-- <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script> -->
     <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
 
     <!-- Scripts A-frame (components) -->
@@ -81,6 +106,8 @@
   </head>
 
   <body>
+    <video id=videoRef autoPlay></video>
+
     <a-scene>
       <!-- Gerenciador de arquivos -->
       <a-assets>
@@ -96,15 +123,15 @@
       </a-camera>
 
       <a-entity class="constelacao" set-stars>
-        <a-image id="star1" class="clickable" src="#starTexture" width="4" height="4.5" opacity="0.5"></a-image>
+        <a-image id="star1" class="clickable" src="#starTexture" width="4" height="4.5" opacity="0.1"></a-image>
        
-        <a-image id="star2" class="clickable" src="#starTexture" position="21.0724 8.4112 3.70871" width="4" height="4.5" opacity="0.5"></a-image>
+        <a-image id="star2" class="clickable" src="#starTexture" width="5" height="5" opacity="0.1"></a-image>
 
-        <a-image id="star3" class="clickable" src="#starTexture" position="10.48846 16.60277 -0.8941" width="4" height="4.5" opacity="0.5"></a-image>
+        <a-image id="star3" class="clickable" src="#starTexture" width="5" height="5" opacity="0.1"></a-image>
 
-        <a-image id="star4" class="clickable" src="#starTexture" position="2.07132 13.71825 -9.23096" width="4" height="4.5" opacity="0.5"></a-image>
+        <a-image id="star4" class="clickable" src="#starTexture" width="5" height="5" opacity="0.1"></a-image>
 
-        <a-image id="star5" class="clickable" src="#starTexture" position="-8.18114 19.48466 -3.88721" width="4" height="4.5" opacity="0.5"></a-image>
+        <a-image id="star5" class="clickable" src="#starTexture" width="5" height="5" opacity="0.1"></a-image>
       </a-entity>
       <!-- Entidades da cena -->
 
@@ -122,5 +149,29 @@
         <img id="seta-moto" src="./src/assets/seta-guia.png" alt="">
       </div>
     </div>
+    
+    <footer>
+      <img src="./src/assets/99nasestrelas.png" alt="">
+    </footer>
+
+
+    <script>
+      const videoRef = document.getElementById('videoRef');
+      const videoConstraints = {
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+        frameRate: { ideal: 30, max: 60 },
+        facingMode: "environment"
+      };
+
+      navigator.mediaDevices.getUserMedia({ video: videoConstraints })
+        .then(stream => {
+            videoRef.srcObject = stream;
+            videoRef.play();
+        })
+        .catch(error => {
+            console.error('Erro ao acessar a câmera: ', error);
+        });
+    </script>
   </body>
 </html>

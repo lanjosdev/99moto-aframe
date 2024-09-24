@@ -51,7 +51,7 @@ AFRAME.registerComponent('set-stars', {
     activeStar: function (numStar) {
         this.targetStar = numStar;
         this.estrelas[numStar].setAttribute('opacity', 1);
-        this.estrelas[numStar].setAttribute('animation', 'property: scale; to: 2 1.7 1; dir: alternate; dur: 1000; easing: easeInOutQuad; loop: true');
+        this.estrelas[numStar].setAttribute('animation', 'property: scale; to: 2 2 1; dir: alternate; dur: 1000; easing: easeInOutQuad; loop: true');
     },
 
     collisionStar: function (e) {
