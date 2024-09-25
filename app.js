@@ -1,13 +1,27 @@
-AFRAME.registerComponent('set-video-camera', {
+AFRAME.registerComponent('init-permissions', {
     schema: {
         // Onde vai os atributos, se necessario
     },
 
     init: function() {
-        this.el.addEventListener('deviceorientationpermissionrequested', ()=> alert('Para seguir com a experiência é necessario autorizar acesso ao movimento e câmera do celular.'));
-        this.el.addEventListener('deviceorientationpermissiongranted', ()=> alert('Status: As permissões foram concedidas!'));
+        // Editar modal de solicitação de permissões:
+        // device-orientation-permission-ui="denyButtonText: Rejeitar; allowButtonText: Aceitar; deviceMotionMessage: Texto aqui"
+        this.el.setAttribute('device-orientation-permission-ui', "allowButtonText: Entendi; deviceMotionMessage: Para seguir com a experiência é necessário conceder a permissões de movimentação e câmera do celular.");
+
+        // this.el.addEventListener('deviceorientationpermissionrequested', ()=> alert('Para seguir com a experiência é necessario autorizar acesso ao movimento e câmera do celular.'));
+        // this.el.addEventListener('deviceorientationpermissiongranted', ()=> alert('Status: As permissões foram concedidas!'));
         this.el.addEventListener('deviceorientationpermissionrejected', ()=> alert('Status: Permissão de movimento foi negada!'));
 
+        // Para iOS 13+:
+        this.el.addEventListener('deviceorientationpermissiongranted', this.initCamera);
+
+        // Para dispositivos que não solicita permissão de deviceorientation:
+        if(!(window.DeviceOrientationEvent && window.DeviceOrientationEvent.requestPermission)) {
+            this.initCamera();
+        }
+    },
+    
+    initCamera: function() {
         const videoRef = document.getElementById('videoRef');
         const videoConstraints = {
             width: { min: 1440, ideal: 1920, max: 1920 },
@@ -19,13 +33,13 @@ AFRAME.registerComponent('set-video-camera', {
         // Verifica se o navegador suporta getUserMedia
         if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: videoConstraints })
-            .then(stream => {
-                videoRef.srcObject = stream;
-                videoRef.play();
-            })
-            .catch(error => {
-                console.error('Erro ao acessar a câmera: ', error);
-            });
+                .then(stream => {
+                    videoRef.srcObject = stream;
+                    videoRef.play();
+                })
+                .catch(error => {
+                    console.error('Erro ao acessar a câmera: ', error);
+                });
         } 
         else {
             console.error('getUserMedia não é suportado no navegador.');
