@@ -23,79 +23,107 @@
         display: none;
       }
 
+      .a-dialog-allow-button {
+        background-color: #FFDA1C;
+        color: #000;
+      }
+
+      .a-dialog-deny-button {
+        background-color: #dfdfdf;
+        color: #000;
+        outline: 1px solid #000;
+      }
+
+      .a-dialog-ok-button {
+        background-color: green;
+      }
+      
+
       body {
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
         background-color: #020811;
+        /* overflow: hidden; */
 
         position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
 
+        #videoRef {
+          position: absolute;
+          width: 100%;
+          height: 100%;    
+
+          opacity: 0.6;      
+          /* border: 5px solid red; */
+        }
+
         .mira-container {
           position: absolute;
           padding: 0 80px;
           max-width: 370px;
           
-          .mira-seta {
-            position: relative;
+          /* .mira-seta {
+            position: relative; */
             /* background-color: red; */
-            width: 100%;
-            line-height: 0;
+            /* width: 100%;
+            line-height: 0; */
 
             /* #mira-moto { */
               /* background-color: palevioletred; */
               /* max-width: 270px; */
             /* } */
             #seta-moto {
-              max-width: 180px;
               position: absolute;
               top: 50%;
               left: 50%;
               transform: translate(-50%, -50%);
-              /* background-color: rgba(150, 148, 125, 0.527); */
-            }
-          }
-        }
 
-        #videoRef {
-          width: 100%;
-          /* background-color: red; */
-          /* position: absolute; */
-          /* position: absolute;
-          left: 0;
-          top: 0; */
+              max-width: 370px;
+              padding: 0 52px;
+            }
+          /* } */
         }
 
         footer {
           /* background-color: red; */
           width: 100%;
-          max-width: 200px;
+          max-width: 370px;
 
           position: absolute;
           bottom: 0;
 
-          padding: 25px;
+          padding: 25px 110px;
         }
       }
 
       @keyframes brilho {
         0% {
-          filter: drop-shadow(0px 0px 0px yellow)
+          transform: scale(1);
+          filter: drop-shadow(0px 0px 0px yellow);
+          -webkit-filter: drop-shadow(0px 0px 0px yellow);
         }
         50% {
-          filter: drop-shadow(0px 0px 10px yellow)
+          transform: scale(1.1);
+          filter: drop-shadow(0px 0px 10px yellow);
+          -webkit-filter: drop-shadow(0px 0px 10px yellow);
         }
         100% {
-          filter: drop-shadow(0px 0px 0px yellow)
+          transform: scale(1);
+          filter: drop-shadow(0px 0px 0px yellow);
+          -webkit-filter: drop-shadow(0px 0px 0px yellow);
         }
       }
       .animate-brilho {
+        will-change: filter;
         animation: brilho .7s ease-in-out;
       }
     </style>
 
-    <script src="./aframe-master.js"></script>
-    <!-- <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script> -->
+    <!-- <script src="./aframe-master.js"></script> -->
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
 
     <!-- Scripts A-frame (components) -->
@@ -104,9 +132,9 @@
   </head>
 
   <body>
-    <video id=videoRef autoPlay></video>
+    <video id=videoRef autoPlay playsinline></video>
 
-    <a-scene>
+    <a-scene device-orientation-permission-ui="enabled: false" set-video-camera>
       <!-- Gerenciador de arquivos -->
       <a-assets>
         <img id="bgTexture" src="./src/assets/360-image.jpg">
@@ -120,32 +148,30 @@
         <a-cursor color="red" raycaster="objects: .clickable; far: 100" visible="false"></a-cursor>
       </a-camera>
 
-      <a-entity class="constelacao" set-stars>
-        <a-image id="star1" class="clickable" src="#starTexture" width="4" height="4.5" opacity="0.1"></a-image>
+      <a-entity class="constelacao" position="0 0 0" set-stars>
+        <a-image id="star1" class="clickable" src="#starTexture" width="5.5" height="5.5" opacity="0.1"></a-image>
        
-        <a-image id="star2" class="clickable" src="#starTexture" width="5" height="5" opacity="0.1"></a-image>
+        <a-image id="star2" class="clickable" src="#starTexture" width="5.5" height="5.5" opacity="0.1"></a-image>
 
-        <a-image id="star3" class="clickable" src="#starTexture" width="5" height="5" opacity="0.1"></a-image>
+        <a-image id="star3" class="clickable" src="#starTexture" width="5.5" height="5.5" opacity="0.1"></a-image>
 
-        <a-image id="star4" class="clickable" src="#starTexture" width="5" height="5" opacity="0.1"></a-image>
+        <a-image id="star4" class="clickable" src="#starTexture" width="5.5" height="5.5" opacity="0.1"></a-image>
 
-        <a-image id="star5" class="clickable" src="#starTexture" width="5" height="5" opacity="0.1"></a-image>
+        <a-image id="star5" class="clickable" src="#starTexture" width="5.5" height="5.5" opacity="0.1"></a-image>
       </a-entity>
       <!-- Entidades da cena -->
 
-      
       <!-- <a-sky 
       src="#bgTexture" 
       rotation="0 -130 0"
       ></a-sky> -->
     </a-scene>
 
-  
     <div class="mira-container">
-      <div class="mira-seta">
+      <!-- <div class="mira-seta"> -->
         <img id="mira-moto" src="./src/assets/mira-moto.png" alt="">
-        <img id="seta-moto" src="./src/assets/seta-guia.png" alt="">
-      </div>
+        <img id="seta-moto" src="./src/assets/seta-guia0.png" alt="">
+      <!-- </div> -->
     </div>
     
     <footer>
@@ -153,23 +179,35 @@
     </footer>
 
 
-    <script>
+    <!-- <script>
       const videoRef = document.getElementById('videoRef');
       const videoConstraints = {
-        width: { ideal: 1280 },
-        height: { ideal: 720 },
-        frameRate: { ideal: 30, max: 60 },
+        width: { min: 1440, ideal: 1920, max: 1920 },
+        height: { min: 960, ideal: 1080, max: 1080 },
+        aspectRatio: 16 / 9,
         facingMode: "environment"
       };
-
-      navigator.mediaDevices.getUserMedia({ video: videoConstraints })
-        .then(stream => {
+      // const videoConstraints = {
+      //   width: { ideal: 1280 },
+      //   height: { ideal: 720 },
+      //   frameRate: { ideal: 30, max: 60 },
+      //   facingMode: "environment"
+      // };
+      
+      // Verifica se o navegador suporta getUserMedia
+      if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: videoConstraints })
+          .then(stream => {
             videoRef.srcObject = stream;
             videoRef.play();
-        })
-        .catch(error => {
+          })
+          .catch(error => {
             console.error('Erro ao acessar a câmera: ', error);
-        });
-    </script>
+          });
+      } 
+      else {
+        console.error('getUserMedia não é suportado no navegador.');
+      }
+    </script> -->
   </body>
 </html>

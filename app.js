@@ -1,3 +1,39 @@
+AFRAME.registerComponent('set-video-camera', {
+    schema: {
+        // Onde vai os atributos, se necessario
+    },
+
+    init: function() {
+        this.el.addEventListener('deviceorientationpermissionrequested', ()=> alert('Para seguir com a experiência é necessario autorizar acesso ao movimento e câmera do celular.'));
+        this.el.addEventListener('deviceorientationpermissiongranted', ()=> alert('Status: As permissões foram concedidas!'));
+        this.el.addEventListener('deviceorientationpermissionrejected', ()=> alert('Status: Permissão de movimento foi negada!'));
+
+        const videoRef = document.getElementById('videoRef');
+        const videoConstraints = {
+            width: { min: 1440, ideal: 1920, max: 1920 },
+            height: { min: 960, ideal: 1080, max: 1080 },
+            aspectRatio: 16 / 9,
+            facingMode: "environment"
+        };
+        
+        // Verifica se o navegador suporta getUserMedia
+        if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: videoConstraints })
+            .then(stream => {
+                videoRef.srcObject = stream;
+                videoRef.play();
+            })
+            .catch(error => {
+                console.error('Erro ao acessar a câmera: ', error);
+            });
+        } 
+        else {
+            console.error('getUserMedia não é suportado no navegador.');
+        }
+    }
+});
+
+
 AFRAME.registerComponent('set-stars', {
     schema: {
         // Onde vai os atributos, se necessario
@@ -9,12 +45,11 @@ AFRAME.registerComponent('set-stars', {
         this.camera = document.getElementById('camera-target');
         var coordenadas = [
             {
-                constelacao: { x: 0, y: 12, z: -13 },
-                estrela1: { x: 18.05943, y: 1.6, z: -4.37369 },
-                estrela2: { x: 21.0724, y: 8.4112, z: 3.70871 },
-                estrela3: { x: 10.48846, y: 16.60277, z: -0.8941 },
-                estrela4: { x: 2.07132, y: 13.71825, z: -9.23096 },
-                estrela5: { x: -8.18114, y: 19.48466, z: -3.88721 }
+                estrela1: { x: 51.86, y: 39.85, z: -18.18 },
+                estrela2: { x: 24.070, y: 34.85, z: 11.36 },
+                estrela3: { x: 10.48, y: 40.51, z: -8.327 },
+                estrela4: { x: -12.27, y: 42.94, z: -15.55 },
+                estrela5: { x: -24.17, y: 42.70, z: 7.30 }
             }
         ];
         // Escolher uma coordenada ativa aleatória
@@ -22,7 +57,7 @@ AFRAME.registerComponent('set-stars', {
         console.log(coordenadaAtiva);
 
         // Seta as posições da Constelação e estrelas
-        this.el.object3D.position.set(coordenadaAtiva.constelacao.x, coordenadaAtiva.constelacao.y, coordenadaAtiva.constelacao.z);
+        // this.el.object3D.position.set(coordenadaAtiva.constelacao.x, coordenadaAtiva.constelacao.y, coordenadaAtiva.constelacao.z);
         
         // Loop pela array this.estrelas
         this.estrelas = this.el.querySelectorAll('.clickable');
@@ -39,11 +74,14 @@ AFRAME.registerComponent('set-stars', {
     },
 
     tick: function (time, timeDelta) {
+        // Controla seta guia estrelar
+        // let local = this.estrelas[this.targetStar].object3D.getWorldPosition();
         let local = this.estrelas[this.targetStar].object3D.position.clone();
+        // console.log(local);
         this.camera.object3D.worldToLocal(local);
 
         let angleDeg = Math.atan2(-local.y - 0, local.x - 0) * 180 / Math.PI + 180;
-        angleDeg -= 135;
+        angleDeg -= 90;
         
         this.setaMoto.style.transform = `translate(-50%, -50%) rotate(${angleDeg}deg)`;
     },
